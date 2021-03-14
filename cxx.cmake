@@ -1,0 +1,12 @@
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    include(cmake/cxx/gnu.cmake)
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    include(cmake/cxx/clang.cmake)
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+    include(cmake/cxx/msvc.cmake)
+else()
+    message(FATAL_ERROR "Unsupported compiler")
+endif()
+
+include(cmake/cxx/add_library.cmake)
+include(cmake/cxx/add_benchmark.cmake)
