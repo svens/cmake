@@ -1,2 +1,1 @@
-Reusable cmake macros for C++ projects.
-Initial implementation, do not use.
+Reusable cmake macros/functions for C++ projects.
