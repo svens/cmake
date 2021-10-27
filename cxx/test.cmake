@@ -1,6 +1,11 @@
 function(_cxx_test_cov name base_dir)
 	message(CHECK_START "Coverage")
 
+	if(NOT "${CMAKE_BUILD_TYPE};${CMAKE_CONFIGURATION_TYPES}" MATCHES ".*Coverage.*")
+		message(CHECK_FAIL "not enabled")
+		return()
+	endif()
+
 	if(NOT CMAKE_CXX_COMPILER_ID MATCHES "GNU")
 		message(CHECK_FAIL "unsupported compiler")
 		return()
@@ -30,8 +35,6 @@ function(_cxx_test_cov name base_dir)
 
 	message(CHECK_PASS "enabled")
 
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage" PARENT_SCOPE)
-
 	set(LCOV_ARGS
 		--quiet
 		--base-directory ${base_dir}
@@ -59,7 +62,7 @@ function(_cxx_test_cov name base_dir)
 endfunction()
 
 macro(cxx_test name)
-	cmake_parse_arguments(${name} "" "COVERAGE;COVERAGE_BASE_DIR" "SOURCES;LIBRARIES" ${ARGN})
+	cmake_parse_arguments(${name} "" "COVERAGE_BASE_DIR" "SOURCES;LIBRARIES" ${ARGN})
 
 	message(CHECK_START "cxx_test(${name})")
 	list(APPEND CMAKE_MESSAGE_INDENT "    ")
@@ -86,9 +89,7 @@ macro(cxx_test name)
 	include(Catch)
 	catch_discover_tests(${name})
 
-	if(${${name}_COVERAGE})
-		_cxx_test_cov(${name} ${${name}_COVERAGE_BASE_DIR})
-	endif()
+	_cxx_test_cov(${name} ${${name}_COVERAGE_BASE_DIR})
 
 	list(POP_BACK CMAKE_MESSAGE_INDENT)
 	message(CHECK_PASS "done")
