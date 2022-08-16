@@ -87,7 +87,9 @@ macro(cxx_test name)
 
 	message(VERBOSE "Discover tests")
 	include(Catch)
-	catch_discover_tests(${name})
+	catch_discover_tests(${name}
+		EXTRA_ARGS --skip-benchmarks
+	)
 
 	_cxx_test_cov(${name} ${${name}_COVERAGE_BASE_DIR})
 

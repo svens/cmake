@@ -8,7 +8,6 @@ else()
 	message(FATAL_ERROR "Unsupported compiler")
 endif()
 
-include(cmake/cxx/benchmark.cmake)
 include(cmake/cxx/doc.cmake)
 include(cmake/cxx/executable.cmake)
 include(cmake/cxx/library.cmake)
