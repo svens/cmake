@@ -40,6 +40,8 @@ function(_cxx_test_cov name base_dir)
 		--base-directory ${base_dir}
 		--exclude '${base_dir}/*test*'
 		--exclude '${base_dir}/**/*test*'
+		--exclude '${base_dir}/*bench*'
+		--exclude '${base_dir}/**/*bench*'
 		--exclude '**/_deps/*'
 		--directory ${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles
 		--rc lcov_branch_coverage=1
