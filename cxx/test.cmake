@@ -71,21 +71,35 @@ macro(cxx_test name)
 
 	enable_testing()
 
-	message(VERBOSE "Fetch catchorg/catch2")
-	include(FetchContent)
-	FetchContent_Declare(Catch2
-		GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-		GIT_TAG devel
-		GIT_SHALLOW ON
-	)
-	FetchContent_MakeAvailable(Catch2)
-	FetchContent_GetProperties(Catch2 SOURCE_DIR Catch2_SOURCE_DIR)
-	list(APPEND CMAKE_MODULE_PATH ${Catch2_SOURCE_DIR}/extras)
+	# https://github.com/catchorg/Catch2/issues/2462
+	set(_find_installed_catch2 ON)
+	if(CMAKE_CXX_COMPILER_ID MATCHES "GNU" AND ${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
+		set(_find_installed_catch2 OFF)
+	endif()
+
+	if(_find_installed_catch2)
+		find_package(Catch2 3 QUIET)
+	endif()
+
+	if(NOT Catch2_FOUND)
+		message(STATUS "Fetch catchorg/catch2")
+		include(FetchContent)
+		FetchContent_Declare(Catch2
+			GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+			GIT_TAG devel
+			GIT_SHALLOW ON
+		)
+		FetchContent_MakeAvailable(Catch2)
+		FetchContent_GetProperties(Catch2 SOURCE_DIR Catch2_SOURCE_DIR)
+		list(APPEND CMAKE_MODULE_PATH ${Catch2_SOURCE_DIR}/extras)
+	endif()
 
 	add_executable(${name} ${${name}_SOURCES})
 	target_compile_options(${name} PRIVATE ${cxx_max_warning_flags})
-	target_include_directories(${name} SYSTEM PRIVATE ${Catch2_SOURCE_DIR}/src)
-	target_link_libraries(${name} Catch2::Catch2 ${${name}_LIBRARIES})
+	if(NOT Catch2_FOUND)
+		target_include_directories(${name} SYSTEM PRIVATE ${Catch2_SOURCE_DIR}/src)
+	endif()
+	target_link_libraries(${name} PRIVATE Catch2::Catch2 ${${name}_LIBRARIES})
 
 	message(VERBOSE "Discover tests")
 	include(Catch)
