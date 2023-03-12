@@ -71,7 +71,7 @@ macro(cxx_test name)
 
 	enable_testing()
 
-	# https://github.com/catchorg/Catch2/issues/2462
+	# TODO https://github.com/catchorg/Catch2/issues/2462
 	set(_find_installed_catch2 ON)
 	if(CMAKE_CXX_COMPILER_ID MATCHES "GNU" AND ${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
 		set(_find_installed_catch2 OFF)
