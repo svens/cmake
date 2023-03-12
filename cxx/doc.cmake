@@ -4,7 +4,7 @@ function(cxx_doc name)
 	message(CHECK_START "cxx_doc(${name})")
 	list(APPEND CMAKE_MESSAGE_INDENT "    ")
 
-	find_package(Doxygen)
+	find_package(Doxygen QUIET)
 	if(NOT DOXYGEN_FOUND)
 		message(CHECK_FAIL "Doxygen not found")
 		return()
