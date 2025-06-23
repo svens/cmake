@@ -44,7 +44,10 @@ function(_cxx_test_cov name base_dir)
 		--exclude '${base_dir}/**/*bench*'
 		--exclude '**/_deps/*'
 		--directory ${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles
-		--rc lcov_branch_coverage=1
+		--rc branch_coverage=1
+		--ignore-errors unused,unused
+		--ignore-errors mismatch,mismatch
+		--ignore-errors gcov,gcov
 		--gcov-tool ${COV}
 	)
 	add_custom_target(${name}-cov
@@ -59,7 +62,7 @@ function(_cxx_test_cov name base_dir)
 	)
 	add_custom_command(TARGET ${name}-cov POST_BUILD
 		COMMENT "Generating ${CMAKE_BINARY_DIR}/cov/index.html"
-		COMMAND ${GENHTML} --rc lcov_branch_coverage=1 -q --demangle-cpp --legend --output-directory cov ${name}.info
+		COMMAND ${GENHTML} --rc branch_coverage=1 -q --demangle-cpp --legend --output-directory cov ${name}.info
 	)
 endfunction()
 
@@ -86,7 +89,7 @@ macro(cxx_test name)
 		include(FetchContent)
 		FetchContent_Declare(Catch2
 			GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-			GIT_TAG v3.5.2
+			GIT_TAG v3.8.1
 			GIT_SHALLOW ON
 		)
 		FetchContent_MakeAvailable(Catch2)
